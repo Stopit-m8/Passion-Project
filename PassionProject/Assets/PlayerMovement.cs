@@ -14,13 +14,34 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckRadius;
     public LayerMask groundMask;
+    public bool doubleGet;
 
     private Rigidbody2D rb;
     private float direction;
+    private int jumpCount;
 
     private void Start()
     {
+        jumpCount = 0;
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void jump()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+        }
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+        }
+    }
+
+    private void doubleJump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+        jumpCount++;
     }
 
     private void Update()
@@ -32,14 +53,17 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(direction * speed, rb.velocity.y);
         }
-        if (Input.GetButtonDown("Jump") && isGrounded)
+
+        jump();
+
+        if (Input.GetButtonDown("Jump") && !isGrounded && doubleGet && jumpCount < 1)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            doubleJump();
         }
 
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
+        if (isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            jumpCount = 0;
         }
 
     }
