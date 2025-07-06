@@ -68,10 +68,12 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         
     }
+
+
 
     private void OnDrawGizmos()
     {
